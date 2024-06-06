@@ -1,0 +1,79 @@
+alias: NFC Apple Music
+description: Jukebox Tag Scanner
+trigger:
+  - platform: event
+    event_type: tag_scanned
+    context: {}
+condition:
+  - condition: template
+    value_template: "{{ trigger.event.data.tag_id in tags }}"
+  - condition: template
+    value_template: "{{ trigger.event.data.device_id in media_players }}"
+action:
+  - variables:
+      media_content_id: "{{ tags[trigger.event.data.tag_id].media_content_id }}"
+  - delay: 3
+  - if:
+      - condition: and
+        conditions:
+          - condition: template
+            value_template: "{{ 'album' in media_content_id }}"
+    then:
+      - service: script.play_apple_music
+        data:
+          music_url: "{{ media_content_id }}"
+    else:
+      - service: script.play_apple_music_shuffle
+        data:
+          music_url: "{{ media_content_id }}"
+  - delay: 2
+mode: restart
+max_exceeded: silent
+variables:
+  media_players:
+# Potential scanners include scanning a tag on the phone or on the microcontroller RFID scanner next to the tags
+    182fb19427ae65405ac519903d28a131: phone_tag
+    24f4f767515aea3ca81b75f99c9aea00: bedroom_tag
+  tags:
+  # These are the specific Tag IDS that I have and which albums/playlists I have associated them to.
+    04-4D-18-A3-67-26-81:
+      media_content_id: https://music.apple.com/us/album/unreal-unearth/1687585357
+    04-6C-C9-AA-67-26-81:
+      media_content_id: https://music.apple.com/us/album/stick-season/1644777188
+    04-4E-3F-A3-67-26-81:
+      media_content_id: >-
+        https://music.apple.com/us/album/through-the-deep-dark-valley-ten-year-anniversary-remaster/1646705522
+    04-2E-E8-A8-67-26-81:
+      media_content_id: https://music.apple.com/us/album/wasteland-baby/1448967234
+    04-D8-F6-A7-67-26-81:
+      media_content_id: https://music.apple.com/us/album/hozier-bonus-track-version/900672435
+    04-15-4C-A6-67-26-81:
+      media_content_id: https://music.apple.com/us/album/dear-wormwood/1566018136
+    04-6A-37-A9-67-26-81:
+      media_content_id: https://music.apple.com/us/album/the-oh-hellos-ep/1566017376
+    04-CE-1D-A9-67-26-81:
+      media_content_id: https://music.apple.com/us/album/notos/1566021320
+    04-3C-13-A9-67-26-81:
+      media_content_id: https://music.apple.com/us/album/eurus/1566022737
+    04-DB-D9-A6-67-26-81:
+      media_content_id: https://music.apple.com/us/album/zephyrus/1566020702
+    04-5C-C9-A1-67-26-81:
+      media_content_id: https://music.apple.com/us/album/boreas/1566022659
+    04-D6-68-AA-67-26-81:
+      media_content_id: https://music.apple.com/us/album/bright-blues/1651713009
+    04-D8-8C-A9-67-26-81:
+      media_content_id: https://music.apple.com/us/album/joy-in-the-wild-unknown/1362666596
+    04-2F-64-A4-67-26-81:
+      media_content_id: https://music.apple.com/us/playlist/ripe-ep-singles/pl.u-AkAmPges7egM21
+    04-D2-32-AA-67-26-81:
+      media_content_id: https://music.apple.com/us/album/raw-data-feel/1601439797
+    04-BB-42-AA-67-26-81:
+      media_content_id: https://music.apple.com/us/album/a-fever-dream/1608221340
+    04-8C-A1-AA-67-26-81:
+      media_content_id: https://music.apple.com/us/album/get-to-heaven-deluxe-version/1135475796
+    04-D7-82-A4-67-26-81:
+      media_content_id: https://music.apple.com/us/album/re-animator/1504293895
+    04-51-FA-A7-67-26-81:
+      media_content_id: https://music.apple.com/us/album/man-alive/1443199003
+    04-13-2F-A8-67-26-81:
+      media_content_id: https://music.apple.com/us/album/arc/553970017
