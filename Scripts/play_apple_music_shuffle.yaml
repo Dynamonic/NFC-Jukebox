@@ -1,0 +1,31 @@
+alias: Play Apple Music (Shuffle)
+sequence:
+  - service: script.bedroom_apple_tv_on
+    data: {}
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 5
+      milliseconds: 0
+  - service: media_player.play_media
+    target:
+      entity_id: media_player.lightweaver
+    data:
+      media_content_id: "{{ music_url }}"
+      media_content_type: url
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 5
+      milliseconds: 0
+# Sends remote command to move cursor right (from play to shuffle) then press select
+  - service: remote.send_command
+    target:
+      entity_id: remote.lightweaver
+    data:
+      delay_secs: 1
+      command:
+        - right
+        - select
+mode: restart
+icon: mdi:music-circle
