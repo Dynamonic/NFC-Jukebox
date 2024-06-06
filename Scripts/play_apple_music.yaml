@@ -1,0 +1,34 @@
+alias: Play Apple Music
+sequence:
+# Turns on Apple TV
+  - service: script.bedroom_apple_tv_on
+    data: {}
+# Give a delay to wake up
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 5
+      milliseconds: 0
+# Send the media library on apple music
+  - service: media_player.play_media
+    target:
+      entity_id: media_player.lightweaver
+    data:
+      media_content_id: "{{ music_url }}"
+      media_content_type: url
+# Wait for media to load
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 5
+      milliseconds: 0
+# Emulate the remote pressing the select button
+  - service: remote.send_command
+    target:
+      entity_id: remote.lightweaver
+    data:
+      delay_secs: 1
+      command:
+        - select
+mode: restart
+icon: mdi:music-circle
