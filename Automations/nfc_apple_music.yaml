@@ -4,16 +4,16 @@ trigger:
   - platform: event
     event_type: tag_scanned
     context: {}
-condition:
+condition: # THIS CONDITION CHECKS TO MAKE SURE THE TAG AND SCANNER ARE BOTH WHITELISTED
   - condition: template
     value_template: "{{ trigger.event.data.tag_id in tags }}"
   - condition: template
     value_template: "{{ trigger.event.data.device_id in media_players }}"
-action:
+action: # PULL MEDIA DATA FROM THE  ASSOCIATED TAG
   - variables:
       media_content_id: "{{ tags[trigger.event.data.tag_id].media_content_id }}"
   - delay: 3
-  - if:
+  - if: # IF THE MEDIA IS AN ALBUM PLAY THE ALBUM, OTHERWISE IF IT IS A PLAYLIST SHUFFLE PLAY THE PLAYLIST
       - condition: and
         conditions:
           - condition: template
